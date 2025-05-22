@@ -60,6 +60,14 @@
     Projet Atelier Web2 - ISET Bizerte - 2024/2025
   </footer>  
   <script>
+    const defaultTools = [ 
+  { name: "Sécateur Pro", type: "Coupe", qty: 10, img: "image_url" },
+  // ... autres outils par défaut
+];
+
+if (!localStorage.getItem('tools')) {
+  localStorage.setItem('tools', JSON.stringify(defaultTools));
+}
     let tools = JSON.parse(localStorage.getItem('tools')) || [];
     let editingIndex = null;
 
