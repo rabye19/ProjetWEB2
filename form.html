@@ -1,0 +1,151 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Spring Tools Store</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { background-color: #f8f9fa; }
+    header { background-color: #2f6e4d; color: white; padding: 1rem; }
+    footer { background-color: #eeee; padding: 1rem; text-align: center; }
+    .card img { width: 50px; height: auto; }
+  </style>
+</head>
+<body>
+  <header class="text-center">
+    <h1><a href="index.html"><img src="/home/rabye/Downloads/store-svgrepo-com.svg" width="30" height="30"></a> Spring Tools Store </h1>
+  </header>  <main class="container mt-4">
+    <div class="d-flex justify-content-between mb-3">
+      <button class="btn btn-success" onclick="openForm()">Add tool</button>
+      <button class="btn btn-danger" onclick="deleteAllTools()">Reset tools</button>
+      <input type="text" id="searchInput" class="form-control w-25" placeholder="Find Item" oninput="searchTools()">
+    </div><table class="table table-bordered" id="toolTable">
+  <thead class="table-dark">
+    <tr>
+      <th>Image</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Quantity</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody id="toolList"></tbody>
+</table>
+
+<div class="card p-3 mt-4" id="toolForm" style="display: none;">
+  <h4 id="formTitle">Add new tool</h4>
+  <input type="hidden" id="toolIndex">
+  <div class="row mb-2">
+    <div class="col">
+      <label>Tool Name</label>
+      <input type="text" id="toolName" class="form-control">
+    </div>
+    <div class="col">
+      <label>Type</label>
+      <input type="text" id="toolType" class="form-control">
+    </div>
+    <div class="col">
+      <label>Quantity</label>
+      <input type="number" id="toolQty" class="form-control">
+    </div>
+    <div class="col">
+      <label>Image URL</label>
+      <input type="text" id="toolImg" class="form-control">
+    </div>
+  </div>
+  <button class="btn btn-primary" onclick="saveTool()">Save</button>
+</div>
+
+  </main>  <footer class="mt-4">
+    Projet Atelier Web2 - ISET Bizerte - 2024/2025
+  </footer>  
+  <script>
+    let tools = JSON.parse(localStorage.getItem('tools')) || [];
+    let editingIndex = null;
+
+    function renderTools(list = tools) {
+      const tbody = document.getElementById('toolList');
+      tbody.innerHTML = '';
+      list.forEach((tool, index) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = 
+        `
+          <td><img src="${tool.img || 'https://img.icons8.com/ios/50/gardening.png'}" alt=""/></td>
+          <td>${tool.name}</td>
+          <td>${tool.type}</td>
+          <td>${tool.qty}</td>
+          <td>
+            <button class="btn btn-sm btn-warning" onclick="editTool(${index})">Update</button>
+            <button class="btn btn-sm btn-danger" onclick="deleteTool(${index})">Delete</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function saveTool() {
+      const name = document.getElementById('toolName').value;
+      const type = document.getElementById('toolType').value;
+      const qty = document.getElementById('toolQty').value;
+      const img = document.getElementById('toolImg').value;
+
+      if (!name || !type || !qty) return alert("All areas are required exept for the Image. ");
+
+      const tool = { name, type, qty, img };
+      if (editingIndex !== null) {
+        tools[editingIndex] = tool;
+        editingIndex = null;
+      } else {
+        tools.push(tool);
+      }
+      localStorage.setItem('tools', JSON.stringify(tools));
+      document.getElementById('toolForm').style.display = 'none';
+      renderTools();
+    }
+
+    function editTool(index) {
+      const tool = tools[index];
+      document.getElementById('toolName').value = tool.name;
+      document.getElementById('toolType').value = tool.type;
+      document.getElementById('toolQty').value = tool.qty;
+      document.getElementById('toolImg').value = tool.img;
+      editingIndex = index;
+      document.getElementById('toolForm').style.display = 'block';
+      document.getElementById('formTitle').textContent = 'Edit tool';
+    }
+
+    function deleteTool(index) {
+      if (confirm("Sure ?")) {
+        tools.splice(index, 1);
+        localStorage.setItem('tools', JSON.stringify(tools));
+        renderTools();
+      }
+    }
+
+    function deleteAllTools() {
+      if (confirm("Reset all tools ?")) {
+        tools = [];
+        localStorage.removeItem('tools');
+        renderTools();
+      }
+    }
+
+    function openForm() {
+      document.getElementById('toolForm').style.display = 'block';
+      document.getElementById('formTitle').textContent = 'Add new tool';
+      document.getElementById('toolName').value = '';
+      document.getElementById('toolType').value = '';
+      document.getElementById('toolQty').value = '';
+      document.getElementById('toolImg').value = '';
+      editingIndex = null;
+    }
+
+    function searchTools() {
+      const keyword = document.getElementById('searchInput').value.toLowerCase();
+      const filtered = tools.filter(t => t.name.toLowerCase().includes(keyword) || t.type.toLowerCase().includes(keyword));
+      renderTools(filtered);
+    }
+
+    renderTools();
+  </script></body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Spring Tools Store</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="d-flex justify-content-between align-items-center p-3">
+    <div class="logo d-flex align-items-center">
+      <img src="/home/rabye/Downloads/store-svgrepo-com.svg" width="30" height="30">
+      <h1 class="ms-2">Spring Tools Store</h1>
+    </div>
+    <input type="text" id="searchInput" class="form-control w-50" placeholder="Search for tools...">
+    <div class="cart-icon position-relative">
+      🛒
+      <span id="cartCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+        0
+      </span>
+    </div>
+  </header>
+
+  <main class="container mt-4">
+    <div class="row" id="productList"></div>
+  </main>
+
+  <div class="modal-backdrop" id="buyModal">
+    <div class="modal-content">
+      <span onclick="closeModal()" class="close-btn">&times;</span>
+      <h5>Complete Your Purchase</h5>
+      <form id="purchaseForm">
+        <input type="text" placeholder="Name" class="form-control mb-2" required>
+        <input type="email" placeholder="Email" class="form-control mb-2" required>
+        <input type="text" placeholder="Address" class="form-control mb-2" required>
+        <button class="btn btn-success">Buy</button>
+      </form>
+    </div>
+  </div>
+
+  <footer class="text-center mt-5 p-3 bg-light">Projet Atelier Web2 - ISET Bizerte - 2024/2025</footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
